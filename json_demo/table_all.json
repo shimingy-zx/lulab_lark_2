@@ -1,0 +1,102 @@
+[
+    {
+        "name": "使用说明书",
+        "revision": 74,
+        "table_id": "tblCqCPkEOSl7dUo"
+    },
+    {
+        "name": "迭代事项",
+        "revision": 39,
+        "table_id": "tbljCKWqYs9DCSL1"
+    },
+    {
+        "name": "user",
+        "revision": 4116,
+        "table_id": "tblX4oyTPrF5UwAv"
+    },
+    {
+        "name": "账户信息",
+        "revision": 54,
+        "table_id": "tblQmR7JmHftpNn6"
+    },
+    {
+        "name": "证件信息",
+        "revision": 188,
+        "table_id": "tblYLVHIk0FMVwZb"
+    },
+    {
+        "name": "课程咨询",
+        "revision": 9707,
+        "table_id": "tblofVnOtmB3bkNz"
+    },
+    {
+        "name": "会员申请",
+        "revision": 4201,
+        "table_id": "tblcnrcVFIhFKTkO"
+    },
+    {
+        "name": "训练营申请",
+        "revision": 0,
+        "table_id": "tblDYQdjMzvFQUQX"
+    },
+    {
+        "name": "会员offer",
+        "revision": 75,
+        "table_id": "tblkRd6JIANcyVWA"
+    },
+    {
+        "name": "order_course",
+        "revision": 19295,
+        "table_id": "tblzgHlr9TlPwhZc"
+    },
+    {
+        "name": "课程退款",
+        "revision": 885,
+        "table_id": "tbleZKNX5Og3Dwrr"
+    },
+    {
+        "name": "会员缴费",
+        "revision": 4138,
+        "table_id": "tbldiua1VPftkzuH"
+    },
+    {
+        "name": "会员退款",
+        "revision": 1228,
+        "table_id": "tblr4fIjh2JHa2RU"
+    },
+    {
+        "name": "会员信息",
+        "revision": 9041,
+        "table_id": "tblvTcT4r9clW2Jk"
+    },
+    {
+        "name": "会员交接",
+        "revision": 1373,
+        "table_id": "tblfS08JOfBwOLfo"
+    },
+    {
+        "name": "会员状态",
+        "revision": 9875,
+        "table_id": "tblP8EUUsM0PTMc6"
+    },
+    {
+        "name": "会员冻结",
+        "revision": 1493,
+        "table_id": "tblICkb9jU3hFHrE"
+    },
+    {
+        "name": "会员invioce",
+        "revision": 668,
+        "table_id": "tblvXYlNjmgJ1hTW"
+    },
+    {
+        "name": "会员跟踪",
+        "revision": 994,
+        "table_id": "tblIcpAhx2O6HWTI"
+    },
+    {
+        "name": "会员咨询",
+        "revision": 141,
+        "table_id": "tblCuseu9VXg77eR"
+    }
+]

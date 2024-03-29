@@ -1,11 +1,19 @@
+/*
+ * @Author: 杨仕明 shiming.y@qq.com
+ * @Date: 2024-03-29 02:34:18
+ * @LastEditors: 杨仕明 shiming.y@qq.com
+ * @LastEditTime: 2024-03-30 01:00:10
+ * @FilePath: /lulab_lark_2/src/app.ts
+ * @Description: 
+ * 
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
+ */
 
 
 
 import express from 'express'
 // import { startCronJob } from './cron/cronJob';
 import { sync } from './playground/sync'
-// import { test } from './playground/test'
-// import { Row, Field, Record } from './playground/types'; // 确保路径正确
 import bodyParser from 'body-parser'; // Import bodyParser
 
 const app = express()
@@ -15,17 +23,36 @@ app.use(bodyParser.json());
 
 app.post('/sync', async (req, res) => {
     // Extract data from the request body
-    const { tableIds, table_ab, table_sync } = req.body;
+    const { table_align, field_align, field_sync } = req.body;
+
+    const authHeader = req.headers.authorization;
+
+
+    if (!authHeader) {
+        return res.status(400).send('No token detected');
+    }
+
+    // 使用正则表达式匹配Bearer token并提取其中的token值
+    const token = authHeader.replace(/^Bearer\s+/i, "");
+
+    if (token != "1234560") {
+        return res.status(400).send('token 错误');
+    }
+
 
     // Ensure the required data is present
-    if (!tableIds || !table_ab || !table_sync) {
+    if (!table_align || !field_align || !field_sync) {
         return res.status(400).send('Missing required data');
     }
 
-    // 立即响应客户端
-    res.json({ message: '请求已接收，数据同步中', success: true });
+
     // Call the sync function with the extracted data
-    await sync(tableIds, table_ab, table_sync);
+    try {
+        const result = await sync(table_align, field_align, field_sync);
+        return res.status(400).send({ result });
+    } catch (error) {
+        return res.status(400).send({ error: error });
+    }
 });
 
 // app.get('/stop_cron', (req, res) => {
@@ -38,10 +65,6 @@ app.post('/sync', async (req, res) => {
 // });
 
 
-// app.get('/test', async (req, res) => {
-//     //await test("abc", "123");
-//     res.send('Cron job scheduled!');
-// });
 
 app.get('/', async (req, res) => {
     //await sync("abc", "123"); 

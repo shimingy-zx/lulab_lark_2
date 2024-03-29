@@ -1,20 +1,25 @@
 /*
  * @Author: 杨仕明 63637615+shimingy-zx@users.noreply.github.com
  * @Date: 2024-03-29 01:33:04
- * @LastEditors: 杨仕明 63637615+shimingy-zx@users.noreply.github.com
- * @LastEditTime: 2024-03-29 01:51:32
- * @FilePath: \lulab_lark\playground\convertDate.ts
- * @Description: 
- * 
- * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
+ * @LastEditors: 杨仕明 shiming.y@qq.com
+ * @LastEditTime: 2024-03-30 01:13:02
+ * @FilePath: /lulab_lark_2/src/playground/convertDate.ts
+ * @Description:
+ *
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
  */
-export function processData(data: any[], fieldTypeMap: Map<string, number>): any[] {
-
-    return data.map(item => {
+export function processData(
+    data: any[],
+    fieldTypeMap: Map<string, number>
+): any[] {
+    return data.map((item) => {
         const fields = item.fields;
         //console.log(item.fields);
-        Object.keys(fields).forEach(fieldName => {
-            const fieldType = fieldTypeMap.find(item => item.field_name === fieldName)?.type;
+        Object.keys(fields).forEach((fieldName) => {
+            const fieldType = fieldTypeMap.find(
+                (item: { field_name: string; }) => item.field_name === fieldName
+            )?.type;
+
             switch (fieldType) {
                 //多行文本
                 case 1:
@@ -32,27 +37,35 @@ export function processData(data: any[], fieldTypeMap: Map<string, number>): any
                 case 7:
                     break;
                 case 11:
-                    fields[fieldName] = fields[fieldName].map(({ email, avatar_url, en_name, name, ...rest }) => rest);
+                    fields[fieldName] = fields[fieldName].map(
+                        ({ email, avatar_url, en_name, name, ...rest }) => rest
+                    );
                     break;
                 case 13:
                     break;
                 case 15:
                     break;
                 case 21:
-                    fields[fieldName] = [item.record_id]
+                    fields[fieldName] = [item.record_id];
                     break;
                 case 1003:
-                    fields[fieldName] = fields[fieldName].map(({ en_name, email, name, ...rest }) => rest);
+                    fields[fieldName] = fields[fieldName].map(
+                        ({ en_name, email, name, ...rest }) => rest
+                    );
                     break;
                 case 1004:
-                    fields[fieldName] = fields[fieldName].map(({ en_name, email, name, ...rest }) => rest);
+                    fields[fieldName] = fields[fieldName].map(
+                        ({ en_name, email, name, ...rest }) => rest
+                    );
                     break;
                 default:
                     delete item.fields;
                     break;
             }
         });
+
         return item;
+
     });
 }
 
