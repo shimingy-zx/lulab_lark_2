@@ -2,7 +2,7 @@
  * @Author: 杨仕明 shiming.y@qq.com
  * @Date: 2024-03-29 02:34:18
  * @LastEditors: 杨仕明 shiming.y@qq.com
- * @LastEditTime: 2024-03-29 18:16:23
+ * @LastEditTime: 2024-03-30 14:32:37
  * @FilePath: /lulab_lark_2/src/playground/types.ts
  * @Description: 
  * 
@@ -50,21 +50,37 @@ interface TableItem {
 }
 
 
-
-// 定义 Field 接口
-export interface Field {
-    [key: string]: string | undefined;
+export interface Record_up {
+    fields: { [key: string]: string };
+    record_id: string;
 }
 
-// 定义 Record 接口
 export interface Record {
-    fields: Field;
+    fields: {
+        [key: string]: string | any[];
+    };
     id: string;
     record_id: string;
 }
 
 
-export interface Record_up {
-    fields: { [key: string]: string };
-    record_id: string;
+
+
+// 定义请求字段返回数据结构的接口
+export interface FieldItem {
+    field_id: string;
+    field_name: string;
+    is_primary: boolean;
+    property: any;
+    type: number;
+    ui_type: "Text" | "Barcode" | "Number" | "Progress" | "Currency" | "Rating" | "SingleSelect" | "MultiSelect" | "DateTime" | "Checkbox" | "User" | "GroupChat" | "Phone" | "Url" | "Attachment" | "SingleLink" | "Formula" | "DuplexLink" | "Location" | "CreatedTime" | "ModifiedTime" | "CreatedUser" | "ModifiedUser" | "AutoNumber" | undefined;
+    description: string;
+    is_hidden?: boolean;
+}
+
+export interface Person {
+    email: string;
+    en_name: string;
+    name: string;
+    avatar_url: string;
 }

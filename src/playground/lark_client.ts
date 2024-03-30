@@ -1,5 +1,5 @@
 import { BaseClient } from "@lark-base-open/node-sdk";
-import { TableResponse } from './types'; // 确保路径正确
+import { Record, FieldItem } from './types';
 require("dotenv").config();
 
 // 假设环境变量的类型是 string 或 undefined
@@ -15,52 +15,6 @@ const client = new BaseClient({
     appToken: APP_TOKEN,
     personalBaseToken: PERSONAL_BASE_TOKEN,
 });
-
-
-
-
-
-// 定义 Item 和 ItemList 类型，根据您的实际数据结构调整这些类型
-interface Fields {
-    "客户姓名"?: string;
-    "手机号码"?: string;
-    "wechat"?: string;
-    "real_name"?: string;
-    "phone"?: string;
-}
-
-interface Item {
-    fields: Fields;
-    id: string;
-    record_id: string;
-}
-
-type ItemList = Item[];
-
-
-
-// 定义返回数据结构的接口
-interface FieldItem {
-    field_id: string;
-    field_name: string;
-    is_primary: boolean;
-    property: any;
-    type: number;
-    ui_type: string;
-}
-
-interface ResponseData {
-    has_more: boolean;
-    items: FieldItem[];
-    page_token: string;
-    total: number;
-}
-
-interface ApiResponse {
-    code: number;
-    data: ResponseData;
-    msg: string;
-}
 
 
 /**
@@ -92,19 +46,19 @@ async function getappTable() {
 
 
 /**
- * @description: 
+ * @description 获取表格字段
  * @param {string} table_id
  * @return {*}
  */
 async function fetchField(table_id: string): Promise<FieldItem[]> {
 
-    let page_token = null;
+    let page_token = undefined;
     let has_more = true;
     let itemList: FieldItem[] = [];
 
     while (has_more) {
         try {
-            const resA: ApiResponse = await client.base.appTableField.list({
+            const result = await client.base.appTableField.list({
                 params: {
                     page_size: 100,
                     page_token // 使用page_token获取下一页数据
@@ -114,18 +68,26 @@ async function fetchField(table_id: string): Promise<FieldItem[]> {
                 },
             });
 
+            const { data } = result
+
+            const items = data?.items ?? []
             // 合并当前页的项目到itemList
-            itemList = itemList.concat(resA.data.items);
-            has_more = resA.data.has_more;
-            page_token = resA.data.page_token;
+            itemList = itemList.concat(items as FieldItem[]);
+            has_more = data?.has_more ?? false;
+            page_token = data?.page_token;
 
 
-        } catch (error) {
+        } catch (error: any) {
             console.log('=======从指定的表中获取字段发生错误========');
             console.log(error);
             console.log('======================================');
+            // 通过类型守卫检查错误对象的类型
             if (error.response.status === 429) {
                 // 当遇到429错误时等待
+                const waitTime = 5;
+                console.log(`Rate limit reached. Waiting for ${waitTime} seconds.`);
+                await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
+            } else if (error.data.code === 1254607) {
                 const waitTime = 5;
                 console.log(`Rate limit reached. Waiting for ${waitTime} seconds.`);
                 await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
@@ -142,6 +104,9 @@ async function fetchField(table_id: string): Promise<FieldItem[]> {
 
 
 
+
+
+
 /**
  * 从指定的表中检索数据
  * @param client - BaseClient 实例
@@ -149,18 +114,18 @@ async function fetchField(table_id: string): Promise<FieldItem[]> {
  * @param table_id - 要检索的表的 ID
  * @returns 返回检索到的数据列表
  */
-async function fetchTableRecord(field_align: string[], field_sync: string[], table_id: string): Promise<ItemList> {
+async function fetchTableRecord(field_align: string[], field_sync: string[], table_id: string): Promise<Record[]> {
 
-    let page_token = "";
+    let page_token = undefined;
     let has_more = true;
-    let itemList: ItemList = [];
+    let itemList: Record[] = [];
     let combinedFields: string[] = [...field_align, ...field_sync];
     let filter = 'NOT(CurrentValue.[' + field_align + '] ="")'
     console.log(`>>> 开始请求${table_id}数据`);
 
     while (has_more) {
         try {
-            const res = await client.base.appTableRecord.list({
+            const result = await client.base.appTableRecord.list({
                 params: {
                     page_size: 400,
                     field_names: JSON.stringify(combinedFields),
@@ -172,19 +137,19 @@ async function fetchTableRecord(field_align: string[], field_sync: string[], tab
                 },
             });
 
+            const { data } = result
 
-            // console.log(res.code);
-            // if(res.code==)
-
-            itemList = itemList.concat(res.data.items);
+            const items = data?.items ?? []
+            // 合并当前页的项目到itemList
+            itemList = itemList.concat(items as Record[]);
             console.log(`>>> 已获取表${table_id}数据个数：`, itemList.length);
-
-            // 更新循环条件
-            has_more = res.data.has_more;
-            page_token = res.data.page_token;
+            has_more = data?.has_more ?? false;
+            page_token = data?.page_token;
 
 
-        } catch (error) {
+
+
+        } catch (error: any) {
             console.log('=======从指定的表中检索数据发生错误========');
             console.log(error);
             console.log('======================================');
@@ -197,10 +162,7 @@ async function fetchTableRecord(field_align: string[], field_sync: string[], tab
                 const waitTime = 5;
                 console.log(`Rate limit reached. Waiting for ${waitTime} seconds.`);
                 await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
-            }
-
-
-            else {
+            } else {
                 // 其他错误则抛出
                 throw error;
             }
