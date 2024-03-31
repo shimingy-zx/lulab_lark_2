@@ -17,6 +17,7 @@ export interface Tableal1ign {
 }
 
 export interface Fieldalign {
+    forEach(arg0: (sync: any) => void): unknown;
     field_a: string;
     field_b: string;
 }

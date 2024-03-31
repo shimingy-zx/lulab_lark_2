@@ -87,7 +87,7 @@ async function fetchField(table_id: string): Promise<FieldItem[]> {
                 const waitTime = 5;
                 console.log(`Rate limit reached. Waiting for ${waitTime} seconds.`);
                 await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
-            } else if (error.data.code === 1254607) {
+            } else if (error.response.data.code === 1254607) {
                 const waitTime = 5;
                 console.log(`Rate limit reached. Waiting for ${waitTime} seconds.`);
                 await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
@@ -114,13 +114,11 @@ async function fetchField(table_id: string): Promise<FieldItem[]> {
  * @param table_id - 要检索的表的 ID
  * @returns 返回检索到的数据列表
  */
-async function fetchTableRecord(field_align: string[], field_sync: string[], table_id: string): Promise<Record[]> {
+async function fetchTableRecord(filter: string, field: string[], table_id: string): Promise<Record[]> {
 
     let page_token = undefined;
     let has_more = true;
     let itemList: Record[] = [];
-    let combinedFields: string[] = [...field_align, ...field_sync];
-    let filter = 'NOT(CurrentValue.[' + field_align + '] ="")'
     console.log(`>>> 开始请求${table_id}数据`);
 
     while (has_more) {
@@ -128,12 +126,12 @@ async function fetchTableRecord(field_align: string[], field_sync: string[], tab
             const result = await client.base.appTableRecord.list({
                 params: {
                     page_size: 400,
-                    field_names: JSON.stringify(combinedFields),
+                    field_names: JSON.stringify(field),
                     page_token,
                     filter,
                 },
                 path: {
-                    table_id: table_id,
+                    table_id,
                 },
             });
 
@@ -158,7 +156,7 @@ async function fetchTableRecord(field_align: string[], field_sync: string[], tab
                 const waitTime = 5;
                 console.log(`Rate limit reached. Waiting for ${waitTime} seconds.`);
                 await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
-            } else if (error.data.code === 1254607) {
+            } else if (error.response.data.code === 1254607) {
                 const waitTime = 5;
                 console.log(`Rate limit reached. Waiting for ${waitTime} seconds.`);
                 await new Promise(resolve => setTimeout(resolve, waitTime * 1000));

@@ -2,7 +2,7 @@
  * @Author: 杨仕明 shiming.y@qq.com
  * @Date: 2024-03-29 02:34:18
  * @LastEditors: 杨仕明 shiming.y@qq.com
- * @LastEditTime: 2024-03-30 01:00:10
+ * @LastEditTime: 2024-03-31 12:04:56
  * @FilePath: /lulab_lark_2/src/app.ts
  * @Description: 
  * 
@@ -49,7 +49,7 @@ app.post('/sync', async (req, res) => {
     // Call the sync function with the extracted data
     try {
         const result = await sync(table_align, field_align, field_sync);
-        return res.status(400).send({ result });
+        return res.status(200).send({ result });
     } catch (error) {
         return res.status(400).send({ error: error });
     }
